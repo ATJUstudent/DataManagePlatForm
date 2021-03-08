@@ -47,9 +47,12 @@ export default {
         console.log(valid);
         if(!valid) return;
         //下面需要向服务器发起请求
-        //const {data: res} =await this.$http.post("login",this.loginform);
-        //if (res.meta.status !== 200) return this.$message.error('登录失败');
-        this.$message.success('登录成功');
+        const  response=await this.$http.post("login",this.loginform);
+        console.log(response['data']);
+        if (response['status'] === 408) 
+          return this.$message.error('登录失败');
+        else 
+          return this.$message.success('登录成功');
       });
     }
   }

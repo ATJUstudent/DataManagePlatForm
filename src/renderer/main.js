@@ -13,7 +13,7 @@ Vue.use(ElementUI)
 import './styles/global.css'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
-axios.defaults.baseURL = 'http://127.0.0.1:8899'
+axios.defaults.baseURL = 'http://127.0.0.1:8080'
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 

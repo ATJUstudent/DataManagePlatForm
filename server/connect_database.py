@@ -1,0 +1,34 @@
+import pymysql
+
+class Oprations_of_Database:
+    def __init__(self,username,password):
+        self.Username = username
+        self.Password = password
+        
+    def build_connection(self):
+        try:
+            self.connection = pymysql.connect(
+                host='127.0.0.1',
+                port = 3306,
+                user = self.Username,
+                password = self.Password,
+                charset = 'utf8'
+            ) #创建一个连接
+            self.cursor = self.connection.cursor() #创建一个游标，用于操作数据库
+            return True
+        except  Exception as error_info:
+            print(error_info) #打印错误信息
+            return False
+
+    def find_all_database(self):
+        sql = "show databases;"
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        return result
+
+if __name__ == '__main__':
+    op_mysql = Oprations_of_Database("root","123456")
+    isLogin = op_mysql.build_connection()
+    # res = op_mysql.find_all_database()
+    # print(res)
+    print(isLogin)
