@@ -16,6 +16,11 @@ export default new Router({
       component: require('@/components/login').default
     },
     {
+      path: '/register',
+      name: 'register-page',
+      component: require('@/components/register').default
+    },
+    {
       path: '*',
       redirect: '/'
     }  //重定向规则

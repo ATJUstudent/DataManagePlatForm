@@ -13,7 +13,7 @@
         <!-- 按钮区域 -->
         <el-form-item class="button_groups">
           <el-button type="primary" @click="login_load">登录</el-button>
-          <el-button type="info">注册</el-button>
+          <el-button type="info" @click="register">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -54,6 +54,9 @@ export default {
         else 
           return this.$message.success('登录成功');
       });
+    },
+    register() {
+      this.$router.push({ path: '/register' })
     }
   }
 }
