@@ -3,7 +3,7 @@
     <div class="login_box">
       <el-form ref="loginFormRef" :model="loginform" :rules="login_rules" label-width="80px" class="login_form">
         <!-- 用户名 -->
-        <el-form-item label="用户名" prop="username">
+        <el-form-item label="用户名">
           <el-input v-model="loginform.username" placeholder="请输入用户名" prefix-icon="el-icon-user"></el-input>
         </el-form-item>
         <!-- 密码 -->
@@ -49,10 +49,11 @@ export default {
         //下面需要向服务器发起请求
         const  response=await this.$http.post("login",this.loginform);
         console.log(response['data']);
-        if (response['status'] === 408) 
-          return this.$message.error('登录失败');
+        if (response['status'] === 200) 
+          this.$message.success('登录成功');
         else 
-          return this.$message.success('登录成功');
+          return this.$message.error('用户名或密码错误');
+        return this.$router.push("/main_page");
       });
     }
   }

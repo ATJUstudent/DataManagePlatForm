@@ -1,6 +1,8 @@
 import pymysql
 
 class Oprations_of_Database:
+    connection = None
+    cursor = None
     def __init__(self,username,password):
         self.Username = username
         self.Password = password
@@ -25,6 +27,8 @@ class Oprations_of_Database:
         self.cursor.execute(sql)
         result = self.cursor.fetchall()
         return result
+
+
 
 if __name__ == '__main__':
     op_mysql = Oprations_of_Database("root","123456")
