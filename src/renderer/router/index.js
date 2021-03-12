@@ -45,6 +45,11 @@ export default new Router({
       path: '/data_home',
       name: 'data_home',
       component: require('@/components/data_manager/data_home').default
+    },
+    {
+      path: '/register',
+      name: 'register-page',
+      component: require('@/components/register').default
     }
   ]
 })
