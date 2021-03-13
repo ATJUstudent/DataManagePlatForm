@@ -46,5 +46,18 @@ def get_database_list():
     result = [{'database_name': item[0]} for item in database_list]
     return jsonify(result)
 
+@app.route('/data_home',methods=['GET'])
+def get_tables():
+    if request.method == 'GET' and request.args.get('name','FLASK') != 'FLASK':
+        name_selected = request.args.get('name')
+        flag_select_db = op_mysql.select_database(name_selected)
+        show_tables = op_mysql.get_all_tables()
+        result = [item[0] for item in show_tables]
+
+        return jsonify(result)
+
+
+
+
 if __name__ == '__main__' :
     app.run(host="127.0.0.1",port= 8080,debug=True)

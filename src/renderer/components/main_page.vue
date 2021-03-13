@@ -26,7 +26,7 @@
                     <el-submenu index="2">
                         <template slot="title">
                             <i class="el-icon-tickets"></i>
-                            <span>用户数据管理</span>
+                            <span>待开发功能</span>
                         </template>
                          <el-menu-item-group>
                                 <el-menu-item index="2-1">功能一</el-menu-item>

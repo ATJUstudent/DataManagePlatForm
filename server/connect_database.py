@@ -30,6 +30,25 @@ class Oprations_of_Database:
         result = self.cursor.fetchall()
         return result
 
+    def select_database(self, db_name):
+        sql = "use {};".format(db_name)
+        try:
+            self.cursor.execute(sql)
+            return True
+        except  Exception as error_info:
+            print(error_info) #打印错误信息
+            return False
+    
+    def get_all_tables(self):
+        sql = "show tables;"
+        try:
+            self.cursor.execute(sql)
+            return self.cursor.fetchall()
+        except  Exception as error_info:
+            print(error_info) #打印错误信息
+            return False
+
+
 
 
 if __name__ == '__main__':
