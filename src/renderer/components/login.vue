@@ -2,6 +2,14 @@
   <div class="login_container">
     <div class="login_box">
       <el-form ref="loginFormRef" :model="loginform" :rules="login_rules" label-width="80px" class="login_form">
+        <!-- IP地址 -->
+        <el-form-item label="IP地址">
+          <el-input v-model="loginform.IP" placeholder="请输入IP地址"></el-input>
+        </el-form-item>
+        <!-- 端口号 -->
+        <el-form-item label="端口号">
+          <el-input v-model="loginform.port" placeholder="请输入端口号"></el-input>
+        </el-form-item>
         <!-- 用户名 -->
         <el-form-item label="用户名">
           <el-input v-model="loginform.username" placeholder="请输入用户名" prefix-icon="el-icon-user"></el-input>
@@ -12,8 +20,7 @@
         </el-form-item>
         <!-- 按钮区域 -->
         <el-form-item class="button_groups">
-          <el-button type="primary" @click="login_load">登录</el-button>
-          <el-button type="info" @click="register">注册</el-button>
+          <el-button type="primary" @click="login_load">确认连接</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -25,6 +32,8 @@ export default {
   data(){
     return{
       loginform: {
+        IP:'',
+        port:'',
         username: '',
         password: ''
       },
@@ -55,9 +64,6 @@ export default {
           return this.$message.error('用户名或密码错误');
         return this.$router.push("/main_page");
       });
-    },
-    register() {
-      this.$router.push({ path: '/register' })
     }
   }
 }
@@ -70,7 +76,7 @@ export default {
 }
 .login_box {
   width: 450px;
-  height: 300px;
+  height: 450px;
   background-color: #fff;
   border-radius: 3px;
   position: absolute;

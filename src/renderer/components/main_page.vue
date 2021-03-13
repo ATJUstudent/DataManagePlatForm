@@ -18,7 +18,7 @@
                             <span>用户数据库设置</span>
                         </template>
                             <el-menu-item-group>
-                                <el-menu-item index="/welcome2">登录设置</el-menu-item>
+                                <el-menu-item index="/welcome2">新建数据库</el-menu-item>
                                 <el-menu-item index="/select-database">数据库选择</el-menu-item>
                             </el-menu-item-group>
                     </el-submenu>

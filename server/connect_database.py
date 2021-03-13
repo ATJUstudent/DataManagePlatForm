@@ -3,15 +3,17 @@ import pymysql
 class Oprations_of_Database:
     connection = None
     cursor = None
-    def __init__(self,username,password):
+    def __init__(self,username,password,IP,port):
         self.Username = username
         self.Password = password
+        self.IP_address = IP
+        self.Port = port
         
     def build_connection(self):
         try:
             self.connection = pymysql.connect(
-                host='127.0.0.1',
-                port = 3306,
+                host = self.IP_address,
+                port = self.Port,
                 user = self.Username,
                 password = self.Password,
                 charset = 'utf8'
