@@ -256,6 +256,36 @@ class DBPrinter(DBConnector):
             table_list = {key: tables}
         return json.dumps(table_list)
 
+    def print_columns(self, database_name, table_name):
+        """ Interface for parsing column of an existed table
+
+        Parameters
+        ----------
+        database_name: String
+            name of an existed database
+        table_name: String
+            name of an existed table of above database
+
+        Returns
+        -------
+        json.dumps(): String
+            a string of json
+
+        Notes
+        -----
+        json: {"Fields": ["id", "name", "password"]}
+
+        """
+        description_list = self.table_columns(database_name, table_name).fetchall()
+        if not description_list:
+            field = {}
+        else:
+            fields = []
+            for description in description_list:
+                fields.append(description['Field'])
+            fields = {"Fields": fields}
+            return json.dumps(fields)
+
     def print_table(self, database_name, table_name):
         """ Interface for reading records in an existed table
 
@@ -297,5 +327,5 @@ class DBPrinter(DBConnector):
 #     print(db.print_databases())
 #     print(db.print_tables('mysql'))
 #     print(db.print_tables('test'))
-#     print(db.print_table('test', 'table2'))
+#     print(db.print_columns('test', 'table2'))
 #     print(db.print_table('mysql', 'db'))
