@@ -44,7 +44,14 @@ export default new Router({
     {
       path: '/data_home',
       name: 'data_home',
-      component: require('@/components/data_manager/data_home').default
+      component: require('@/components/data_manager/data_home').default,
+      children: [
+        {
+          path: '/display_graphics',
+          name: 'display_graphics',
+          component: require('@/components/data_manager/display_graphics').default
+        }
+      ]
     },
     {
       path: '/register',

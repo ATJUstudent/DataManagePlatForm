@@ -20,16 +20,19 @@
             </el-submenu>
             </el-menu>
             <el-main>
-                <el-tabs v-model="activeName" type="card">
+                <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                     <!-- 从上面el-submenu中的项选择指定的数据表进行操作 -->
                     <!-- 数据表的新建、删除、导入导出-->
-                    <el-tab-pane label="数据表管理" name="first">数据表管理</el-tab-pane>
+                    <el-tab-pane label="数据表管理" name="first"></el-tab-pane>
                     <!-- 数据的增删改查 -->
-                    <el-tab-pane label="数据查询" name="second">数据查询</el-tab-pane>
+                    <el-tab-pane label="数据查询" name="second"></el-tab-pane>
                     <!-- 数据统计图展示 -->
-                    <el-tab-pane label="统计图表" name="third">统计图表</el-tab-pane>
-                    <el-tab-pane label="数据分析" name="fourth">数据分析</el-tab-pane>
+                    <el-tab-pane label="统计图表" name="third" ></el-tab-pane>
+                    <el-tab-pane label="数据分析" name="fourth"></el-tab-pane>
                 </el-tabs>
+                <el-card style="height: 100%">
+                    <router-view></router-view>
+                </el-card>
             </el-main>
         </el-container>
     </el-container>
@@ -69,6 +72,17 @@ export default {
         },
         fold_function() {
             this.isCollapse = ! this.isCollapse;
+        },
+        handleClick(tab, event) {
+            if (tab.name == 'first'){
+
+            }else if(tab.name == 'second'){
+
+            }else if(tab.name == 'third'){
+                this.$router.push('/display_graphics');
+            }else {
+
+            }
         }
     }
 }
