@@ -17,6 +17,9 @@ axios.defaults.baseURL = 'http://127.0.0.1:8080'
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
 /* eslint-disable no-new */
 new Vue({
   components: { App },

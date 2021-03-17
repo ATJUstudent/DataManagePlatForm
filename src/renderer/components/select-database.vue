@@ -31,7 +31,7 @@ export default {
           data_base_name: ""
         },
         namelist: [],
-        currentRow: null
+        currentRow: "default"
       };
     },
     created() {

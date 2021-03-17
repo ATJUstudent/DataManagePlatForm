@@ -13,7 +13,7 @@
                 <i class="el-icon-document" @click="fold_function"></i>
                 <span slot="title">数据表</span>
                 </template>
-                <el-menu-item v-for="item in table_list" :key="item" index="item">
+                <el-menu-item v-for="item in table_list" :key="item" index="item" @click="select_table(item)">
                     {{item}}
                     <!-- 在这里进行数据表选择 -->
                 </el-menu-item>
@@ -30,8 +30,8 @@
                     <el-tab-pane label="统计图表" name="third" ></el-tab-pane>
                     <el-tab-pane label="数据分析" name="fourth"></el-tab-pane>
                 </el-tabs>
-                <el-card style="height: 100%">
-                    <router-view></router-view>
+                <el-card style="height: 100%" class="card_shape">
+                   <router-view></router-view>
                 </el-card>
             </el-main>
         </el-container>
@@ -45,7 +45,8 @@ export default {
             isCollapse: true,
             select_db_name:"",
             table_list: [],
-            activeName: "first"
+            activeName: "first",
+            select_table_name: ""
         }
     },
     created() {
@@ -79,10 +80,14 @@ export default {
             }else if(tab.name == 'second'){
 
             }else if(tab.name == 'third'){
-                this.$router.push('/display_graphics');
+                this.$router.push({path :'/display_graphics',query: {table_selected : this.select_table_name}});
             }else {
 
             }
+        },
+        select_table(now_name){
+            this.select_table_name = now_name;
+            //这里之后需要跳转到 查询数据界面
         }
     }
 }
@@ -119,5 +124,9 @@ export default {
     top: 150px;
     height: 100%;
 }
-
+.card_shape {
+    position: absolute;
+    width: 90%;
+    height: 800px;
+}
 </style>

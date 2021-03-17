@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "echarts": "^5.0.2",
+    "echarts": "^4.8.0",
     "element-ui": "^2.15.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
