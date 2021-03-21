@@ -207,6 +207,10 @@ class DBPrinter(DBConnector):
     Interface for reading records in an existed table
 
     """
+    
+    def __init__(self):
+        super().__init__()
+    
     def print_databases(self):
         """ Interface for reading database names
 
@@ -320,12 +324,19 @@ class DBPrinter(DBConnector):
 
 # # 测试用代码，取消注释使用
 # if __name__ == '__main__':
-#     text = open('DBData.json')
-#     json_dict = json.load(text)
-#     DBConnector.init_config(json_dict)
-#     db = DBPrinter()
-#     print(db.print_databases())
-#     print(db.print_tables('mysql'))
-#     print(db.print_tables('test'))
-#     print(db.print_columns('test', 'table2'))
-#     print(db.print_table('mysql', 'db'))
+    # # text = open('DBData.json')
+    # # json_dict = json.load(text)
+    # db_config = {
+        # "ip" : "127.0.0.1",
+        # "port" : 3306,
+        # "database" : "test",
+        # "username" : "root",
+        # "password" : "123456"
+    # }
+    # DBConnector.init_config(db_config)
+    # db = DBPrinter()
+    # print(db.print_databases())
+    # # print(db.print_tables('mysql'))
+    # print(db.print_tables('test'))
+    # # print(db.print_columns('test', 'table2'))
+    # # print(db.print_table('mysql', 'db'))

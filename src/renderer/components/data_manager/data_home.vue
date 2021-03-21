@@ -78,7 +78,7 @@ export default {
             if (tab.name == 'first'){
 
             }else if(tab.name == 'second'){
-
+				this.$router.push({path :'/data_query',query: {db_selected : this.select_db_name, table_selected : this.select_table_name}});
             }else if(tab.name == 'third'){
                 this.$router.push({path :'/display_graphics',query: {table_selected : this.select_table_name}});
             }else {

@@ -50,6 +50,11 @@ export default new Router({
           path: '/display_graphics',
           name: 'display_graphics',
           component: require('@/components/data_manager/display_graphics').default
+        },
+		{
+          path: '/data_query',
+          name: 'data_query',
+          component: require('@/components/data_manager/data_query').default
         }
       ]
     },
