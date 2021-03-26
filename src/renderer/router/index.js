@@ -57,6 +57,13 @@ export default new Router({
               component: require('@/components/data_manager/display_table/bar').default
             }
           ]
+          // component: require('@/components/data_manager/display_graphics').default
+        },
+		    {
+          path: '/data_query',
+          name: 'data_query',
+          component: require('@/components/data_manager/data_query').default
+
         }
       ]
     },

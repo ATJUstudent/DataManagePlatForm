@@ -4,9 +4,19 @@ from flask import request
 from flask import Response
 from flask_cors import CORS
 from connect_database import Oprations_of_Database    #引入我们的数据库操作类
+from dbconn import DBConnector
+from dbconn import DBPrinter
+import json
 
 #创建数据库操作类实例
 op_mysql = Oprations_of_Database("***","***","***","***")
+db_config = {
+    "ip" : "127.0.0.1",
+    "port" : 3306,
+    "database" : "test",
+    "username" : "root",
+    "password" : "123456"
+}
 app = Flask(__name__)
 CORS(app)
 # 路由
@@ -56,6 +66,30 @@ def get_tables():
 
         return jsonify(result)
 
+
+@app.route('/data_home/data_query', methods=['GET'])
+def get_tables_details():
+    if(request.method == 'GET' and request.args.get('db_selected', 'FLASK') != 'FLASK' and request.args.get('table_selected', 'FLASK') != 'FLASK'):
+        db_selected = request.args.get('db_selected')
+        table_selected = request.args.get('table_selected')
+        db_config["database"] = db_selected
+        DBConnector.init_config(db_config)
+        db_printer = DBPrinter()
+        db_printer.print_databases()
+        descriptions = json.loads(db_printer.print_columns(db_selected, table_selected))
+        data = json.loads(db_printer.print_table(db_selected, table_selected))
+        cols = []
+        for item in descriptions['Fields']:
+            cols.append({"prop" : item, "label" : item})
+        tableData = []
+        for key in data:
+            tableData.append(data[key])
+        ret = {}
+        ret['cols'] = cols
+        ret['tableData'] = tableData
+        print(ret)
+        
+        return jsonify(ret)
 
 
 
