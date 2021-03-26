@@ -1,19 +1,17 @@
 <template>
     <div>
-        <el-dropdown class="select_graphics">
+        <el-dropdown class="select_graphics" @command="handleCommand">
             <el-button type="primary" >选择样式</el-button>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>直方图</el-dropdown-item>
-                <el-dropdown-item>折线图</el-dropdown-item>
-                <el-dropdown-item>圆饼图</el-dropdown-item>
+                <el-dropdown-item command="bar">直方图</el-dropdown-item>
+                <el-dropdown-item command="line">折线图</el-dropdown-item>
+                <el-dropdown-item command="pie">圆饼图</el-dropdown-item>
+                <el-dropdown-item command="scatter">散点图</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
         <el-card class="graphics_position" shadow = "hover">
             <div ref="chart" style="width: 100%;height: 400px">
             </div>
-        </el-card>
-        <el-card class="property_table" shaow="hover">
-
         </el-card>
         
     </div>
@@ -24,7 +22,8 @@
 export default {
     data() {
         return {
-            table_name: ""
+            table_name: "",
+            graphic_type: ""
         }
     },
     created (){
@@ -55,6 +54,9 @@ export default {
         get_table_name(){
             this.table_name = this.$route.query.table_selected; //页面之间传参最好使用query而不是params，params用于页面与服务器传参
             // console.log(this.table_name);
+        },
+        handleCommand(command) {
+            this.graphic_type = command;
         }
     }
 }
@@ -71,12 +73,6 @@ export default {
     top: 5px;
     width: 100%;
     height: 400px;
-}
-.property_table {
-    position: relative;
-    left: 0%;
-    top: 10px;
-    width: 100%;
-    height: 300px;
+
 }
 </style>

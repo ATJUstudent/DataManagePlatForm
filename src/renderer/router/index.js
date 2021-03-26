@@ -49,7 +49,14 @@ export default new Router({
         {
           path: '/display_graphics',
           name: 'display_graphics',
-          component: require('@/components/data_manager/display_graphics').default
+          component: require('@/components/data_manager/display_graphics').default,
+          children: [
+            {
+              path: '/bar',
+              name: 'bar',
+              component: require('@/components/data_manager/display_table/bar').default
+            }
+          ]
         }
       ]
     },

@@ -62,6 +62,7 @@ export default {
                 this.table_list[0] = "暂无数据表";
             }else{
                 this.table_list = lists;
+                this.select_table_name = lists[0];
             }
 
         },
@@ -127,6 +128,6 @@ export default {
 .card_shape {
     position: absolute;
     width: 90%;
-    height: 800px;
+    height: 400px;
 }
 </style>
