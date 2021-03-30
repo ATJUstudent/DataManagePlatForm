@@ -110,7 +110,7 @@ def update():        # 视图函数 从request中接收到的值是bytes 字节�
         sc = SqlCreator()
         sc.connect_db()
         print(json.dumps(containt['json']))
-        print(sc.update_object_sql(json.dumps(test), containt['info']['db'], containt['info']['table']))
+        print(sc.update_object_sql(json.dumps(containt['json']), containt['info']['db'], containt['info']['table']))
         print(sc.commit_all())
         response.data = "成功"
         response.status_code = 200
@@ -164,8 +164,8 @@ def add():        # 视图函数 从request中接收到的值是bytes 字节码�
         sc = SqlCreator()
         sc.connect_db()
         print(json.dumps(containt['json']))
-        # print(sc.delete_object_sql(json.dumps(containt['json']), containt['info']['db'], containt['info']['table']))
-        # print(sc.commit_all())
+        print(sc.create_object_sql(json.dumps(containt['json']), containt['info']['db'], containt['info']['table']))
+        print(sc.commit_all())
         response.data = "成功"
         response.status_code = 200
         return response

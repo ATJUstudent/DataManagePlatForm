@@ -59,7 +59,7 @@ class SqlCreator(DBConnector):
         "INSERT INTO table1(id, name) VALUE(3, 'Wang');"]
 
         """
-        objects = json.load(_json)
+        objects = json.loads(_json)
         assert len(objects) < 10000, u'插入数据太多超出限制！'
         sql_template = 'INSERT INTO %s(%s) VALUE(%s);'
         sql_list = []
@@ -189,8 +189,10 @@ class SqlCreator(DBConnector):
                     value[attr] = "'" + str(value[attr]) + "'"
                 key_value.append(attr + '=' + str(value[attr]))
             key_value_str = ', '.join(key_value)
+            if type(value[primary_key]) != int and type(value[primary_key]) != float:
+                    value[primary_key] = "'" + str(value[primary_key]) + "'"
             sql_list.append(sql_template % (database_name + '.' + table_name, key_value_str,
-                                            primary_key + "=" + str(value[primary_key])))
+                                            primary_key + "=" + value[primary_key]))
 
         self._transaction = self._transaction + sql_list
         return sql_list
@@ -248,8 +250,10 @@ class SqlCreator(DBConnector):
                 sql_list.append((sql_template % (database_name + '.' + table_name, cond_str)).rstrip(', ') + ';')
         else:
             for _, value in objects.items():
+                if type(value[primary_key]) != int and type(value[primary_key]) != float:
+                    value[primary_key] = "'" + str(value[primary_key]) + "'"
                 sql_list.append(sql_template % (database_name + '.' + table_name,
-                                                primary_key + "=" + str(value[primary_key])) + ';')
+                                                primary_key + "=" + value[primary_key]) + ';')
 
         self._transaction = self._transaction + sql_list
         return sql_list
