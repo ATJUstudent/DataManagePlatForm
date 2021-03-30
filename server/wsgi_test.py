@@ -6,6 +6,7 @@ from flask_cors import CORS
 from connect_database import Oprations_of_Database    #引入我们的数据库操作类
 from dbconn import DBConnector
 from dbconn import DBPrinter
+from sqlcreator import SqlCreator
 import json
 
 #创建数据库操作类实例
@@ -91,6 +92,86 @@ def get_tables_details():
         
         return jsonify(ret)
 
+@app.route('/data_update',methods=['POST','OPTIONS'])    
+def update():        # 视图函数 从request中接收到的值是bytes 字节码，需要decode('utf8')用utf-8解码
+    response = Response()
+    if request.method == 'POST':
+        test = {"0": {"author": "hahahaha", "name": "c language", "update": ["author"]}};
+        containt = request.data.decode('utf8')
+        containt = eval(containt)
+        config = {
+            "ip" : "127.0.0.1",
+            "port" : 3306,
+            "database" : "test",
+            "username" : "root",
+            "password" : "123456"
+        }
+        SqlCreator.init_config(config)
+        sc = SqlCreator()
+        sc.connect_db()
+        print(json.dumps(containt['json']))
+        print(sc.update_object_sql(json.dumps(test), containt['info']['db'], containt['info']['table']))
+        print(sc.commit_all())
+        response.data = "成功"
+        response.status_code = 200
+        return response
+
+    else:
+        return 'way -> OPTIONS'
+
+@app.route('/data_delete',methods=['POST','OPTIONS'])    
+def delete():        # 视图函数 从request中接收到的值是bytes 字节码，需要decode('utf8')用utf-8解码
+    response = Response()
+    if request.method == 'POST':
+        # test = {"0": {"author": "hahahaha", "name": "c language", "update": ["author"]}};
+        containt = request.data.decode('utf8')
+        containt = eval(containt)
+        config = {
+            "ip" : "127.0.0.1",
+            "port" : 3306,
+            "database" : "test",
+            "username" : "root",
+            "password" : "123456"
+        }
+        SqlCreator.init_config(config)
+        sc = SqlCreator()
+        sc.connect_db()
+        print(json.dumps(containt['json']))
+        print(sc.delete_object_sql(json.dumps(containt['json']), containt['info']['db'], containt['info']['table']))
+        print(sc.commit_all())
+        response.data = "成功"
+        response.status_code = 200
+        return response
+
+    else:
+        return 'way -> OPTIONS'
+
+@app.route('/data_add',methods=['POST','OPTIONS'])    
+def add():        # 视图函数 从request中接收到的值是bytes 字节码，需要decode('utf8')用utf-8解码
+    response = Response()
+    if request.method == 'POST':
+        # test = {"0": {"author": "hahahaha", "name": "c language", "update": ["author"]}};
+        containt = request.data.decode('utf8')
+        containt = eval(containt)
+        config = {
+            "ip" : "127.0.0.1",
+            "port" : 3306,
+            "database" : "test",
+            "username" : "root",
+            "password" : "123456"
+        }
+        SqlCreator.init_config(config)
+        sc = SqlCreator()
+        sc.connect_db()
+        print(json.dumps(containt['json']))
+        # print(sc.delete_object_sql(json.dumps(containt['json']), containt['info']['db'], containt['info']['table']))
+        # print(sc.commit_all())
+        response.data = "成功"
+        response.status_code = 200
+        return response
+
+    else:
+        return 'way -> OPTIONS'
 
 
 if __name__ == '__main__' :

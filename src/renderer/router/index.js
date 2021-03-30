@@ -59,11 +59,20 @@ export default new Router({
           ]
           // component: require('@/components/data_manager/display_graphics').default
         },
-		    {
+		{
           path: '/data_query',
           name: 'data_query',
           component: require('@/components/data_manager/data_query').default
-
+        },
+		{
+              path: '/data_update',
+              name: 'data_update',
+              component: require('@/components/data_manager/data_update').default
+        },
+		{
+              path: '/data_add',
+              name: 'data_add',
+              component: require('@/components/data_manager/data_add').default
         }
       ]
     },

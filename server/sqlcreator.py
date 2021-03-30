@@ -170,7 +170,7 @@ class SqlCreator(DBConnector):
          "UPDATE table1 SET name='White', password=123 WHERE id=3;"]
 
         """
-        objects = json.load(_json)
+        objects = json.loads(_json)
         assert len(objects) < 10000, u'修改数据太多超出限制！'
         description_list = self.table_columns(database_name, table_name).fetchall()
         sql_template = 'UPDATE %s SET %s WHERE %s;'
@@ -229,7 +229,7 @@ class SqlCreator(DBConnector):
 
         """
         description_list = self.table_columns(database_name, table_name).fetchall()
-        objects = json.load(_json)
+        objects = json.loads(_json)
         assert len(objects) < 10000, u'修改数据太多超出限制！'
         sql_template = 'DELETE FROM %s WHERE %s'
         sql_list = []
