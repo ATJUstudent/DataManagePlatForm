@@ -1,7 +1,7 @@
 <template>
 <el-form ref="form" :model="form" label-width="80px">
 	<template v-for="col in cols">                    
-		<el-form-item label=col.label>
+		<el-form-item :label=col.label>
 			<el-input v-model="form[col.label]"></el-input>
 		</el-form-item>        
 	</template>   

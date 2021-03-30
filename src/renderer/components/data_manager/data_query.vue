@@ -14,7 +14,7 @@
 				</span>
 				<el-dropdown-menu slot="dropdown">
 					<template v-for="(col,index) in cols">
-						<el-dropdown-item :command="col.label">col.label</el-dropdown-item>
+						<el-dropdown-item :command="col.label">{{col.label}}</el-dropdown-item>
 					</template>
 				</el-dropdown-menu>
 			</el-dropdown>
