@@ -20,6 +20,11 @@ Vue.config.productionTip = false
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 
+import JsonExcel from 'vue-json-excel'
+
+Vue.component('downloadExcel', JsonExcel)
+
+
 /* eslint-disable no-new */
 new Vue({
   components: { App },

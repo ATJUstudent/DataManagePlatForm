@@ -85,9 +85,13 @@ def get_tables_details():
         tableData = []
         for key in data:
             tableData.append(data[key])
+        fields = []
+        for item in descriptions['Fields']:
+            fields.append({item : item})
         ret = {}
         ret['cols'] = cols
         ret['tableData'] = tableData
+        ret['fields'] = fields
         print(ret)
         
         return jsonify(ret)

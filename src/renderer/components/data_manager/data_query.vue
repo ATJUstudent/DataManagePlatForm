@@ -1,7 +1,15 @@
 <template>
   <div>
   <el-button type="primary" round @click="add">添加数据</el-button>
-  <el-table class="tb-edit" highlight-current-row :data="tableData.filter(data => !search || data[selected_col].toLowerCase().includes(search.toLowerCase()))" height="600" border style="width: 100%">                	
+  <download-excel
+    class = "export-excel-wrapper"
+    :data = "tableData.filter(data => !search || data[selected_col].toString().toLowerCase().includes(search.toString().toLowerCase()))"
+    :fields = "fields"
+    name = "filename.xls">
+    <!-- 上面可以自定义自己的样式，还可以引用其他组件button -->
+    <el-button type="primary" size="small">导出EXCEL</el-button>
+  </download-excel>
+  <el-table class="tb-edit" highlight-current-row :data="tableData.filter(data => !search || data[selected_col].toString().toLowerCase().includes(search.toString().toLowerCase()))" height="600" border style="width: 100%">                	
 	<template v-for="(col,index) in cols">                    
 		<el-table-column :prop="col.prop" :label="col.label"></el-table-column>                
 	</template>              
@@ -47,7 +55,8 @@
 		search: '',
 		selected_col: '',
 		select_db_name: '',
-		table_name: ''
+		table_name: '',
+		fields : []
       }
     },
     created() {
@@ -61,6 +70,7 @@
             var res = JSON.parse(JSON.stringify(result));
             this.cols = res['cols']
             this.tableData = res['tableData']
+			this.fields = res['Fields']
         },
 		handleEdit(index, row) {
 			this.$router.push({path :'/data_update',query: {db_selected : this.select_db_name, table_selected : this.table_name, data : this.tableData[index], cols : this.cols}});
