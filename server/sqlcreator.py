@@ -2,12 +2,12 @@
 Interface for complex CRUD database request
     Temporarily not support foreign keys
 """
-import json
-import pymysql
-from dbconn import DBConnector
 #    Author: Wang Chuhan(wchwzhsgdx@gmail.com)
 #    Time: 2021.03.20
 #    for Data Manage Platform(TJU CS2018-3)
+import json
+import pymysql
+from dbconn import DBConnector
 
 
 class SqlCreator(DBConnector):
@@ -21,6 +21,7 @@ class SqlCreator(DBConnector):
     _transaction: a list of transaction before committing
 
     """
+
     def __init__(self):
         """ initialization function
 
@@ -101,7 +102,7 @@ class SqlCreator(DBConnector):
         -------
         sql_list: String
             a list of sql_list contains sql_list statement: 'SELECT [columns] FROM [database_name]'
-        dict: dict
+        dic: dict
             a dictionary of retrieve result
 
         Examples
@@ -133,13 +134,13 @@ class SqlCreator(DBConnector):
             except KeyError:
                 sql_list.append(sql_template % (columns_str, database_name + '.' + table_name) + ';')
 
-        dict = {}
+        dic = {}
         try:
-            dict = self.execute_sql(sql_list[0]).fetchall()
+            dic = self.execute_sql(sql_list[0]).fetchall()
         except pymysql.err.Error:
             print('查询数据出错，请修改后尝试！')
 
-        return sql_list, dict
+        return sql_list, dic
 
     def update_object_sql(self, _json, database_name, table_name):
         """ U(Update) the data of the selected table in the selected database
@@ -170,7 +171,7 @@ class SqlCreator(DBConnector):
          "UPDATE table1 SET name='White', password=123 WHERE id=3;"]
 
         """
-        objects = json.loads(_json)
+        objects = json.load(_json)
         assert len(objects) < 10000, u'修改数据太多超出限制！'
         description_list = self.table_columns(database_name, table_name).fetchall()
         sql_template = 'UPDATE %s SET %s WHERE %s;'
@@ -189,10 +190,8 @@ class SqlCreator(DBConnector):
                     value[attr] = "'" + str(value[attr]) + "'"
                 key_value.append(attr + '=' + str(value[attr]))
             key_value_str = ', '.join(key_value)
-            if type(value[primary_key]) != int and type(value[primary_key]) != float:
-                    value[primary_key] = "'" + str(value[primary_key]) + "'"
             sql_list.append(sql_template % (database_name + '.' + table_name, key_value_str,
-                                            primary_key + "=" + value[primary_key]))
+                                            primary_key + "=" + str(value[primary_key])))
 
         self._transaction = self._transaction + sql_list
         return sql_list
@@ -231,7 +230,7 @@ class SqlCreator(DBConnector):
 
         """
         description_list = self.table_columns(database_name, table_name).fetchall()
-        objects = json.loads(_json)
+        objects = json.load(_json)
         assert len(objects) < 10000, u'修改数据太多超出限制！'
         sql_template = 'DELETE FROM %s WHERE %s'
         sql_list = []
@@ -250,10 +249,8 @@ class SqlCreator(DBConnector):
                 sql_list.append((sql_template % (database_name + '.' + table_name, cond_str)).rstrip(', ') + ';')
         else:
             for _, value in objects.items():
-                if type(value[primary_key]) != int and type(value[primary_key]) != float:
-                    value[primary_key] = "'" + str(value[primary_key]) + "'"
                 sql_list.append(sql_template % (database_name + '.' + table_name,
-                                                primary_key + "=" + value[primary_key]) + ';')
+                                                primary_key + "=" + str(value[primary_key])) + ';')
 
         self._transaction = self._transaction + sql_list
         return sql_list
@@ -282,11 +279,12 @@ class SqlCreator(DBConnector):
         >>> sc.create_table_sql('json_str', 'test', 'table3')
         ['CREATE TABLE table3(
               id INT PRIMARY KEY NOT NULL DEFAULT NULL,
-              time DATE DEFAULT NULL, value FLOAT DEFAULT NULL
+              time DATE DEFAULT NULL,
+              value FLOAT DEFAULT NULL
           );']
 
         """
-        objects = json.load(_json)
+        objects = json.loads(_json, )
         sql_template = 'CREATE TABLE %s(%s);'
         sql_list = []
 
@@ -301,15 +299,21 @@ class SqlCreator(DBConnector):
                 if field['Key'] == 'PRI':
                     attr_str = attr_str + ' PRIMARY KEY'
 
-                if field['Null'] == 'NO':
-                    attr_str = attr_str + ' NOT NULL'
+                try:
+                    if field['Null'] == 'NO':
+                        attr_str = attr_str + ' NOT NULL'
+                except KeyError:
+                    pass
 
-                if field['Default'] == 'NULL':
-                    attr_str = attr_str + ' DEFAULT NULL'
-                elif type(field['Default']) != int and type(field['Default']) != float:
-                    attr_str = attr_str + " '" + field['Default'] + "'"
-                else:
-                    attr_str = attr_str + ' ' + field['Default']
+                try:
+                    if field['Default'] == 'NULL':
+                        attr_str = attr_str + ' DEFAULT NULL'
+                    elif type(field['Default']) != int and type(field['Default']) != float:
+                        attr_str = attr_str + " '" + field['Default'] + "'"
+                    else:
+                        attr_str = attr_str + ' ' + field['Default']
+                except KeyError:
+                    pass
 
                 fields.append(attr_str)
                 field_str = ', '.join(fields)
@@ -335,7 +339,7 @@ class SqlCreator(DBConnector):
         -------
         sql_list: String
             a list of sql_list contains sql statement: 'DESC [table_name]'
-        dict: dict
+        dic: dict
             a dictionary of retrieve result
 
         Examples
@@ -350,14 +354,14 @@ class SqlCreator(DBConnector):
         sql_template = 'DESC %s'
         sql_list = []
 
-        dict = {}
+        dic = {}
         try:
             sql_list.append(sql_template % database_name + '.' + objects['table'])
-            dict = self.execute_sql(sql_list[0]).fetchall()
+            dic = self.execute_sql(sql_list[0]).fetchall()
         except pymysql.err.Error:
             print('查询操作出错，请修改后重试')
 
-        return sql_list, dict
+        return sql_list, dic
 
     def update_table_sql(self, _json, database_name):
         """ U(Update) columns of table in selected database
@@ -482,7 +486,7 @@ class SqlCreator(DBConnector):
             such as "charset": "utf8" can set charset as "utf8"
 
         """
-        objects = json.load(_json)
+        objects = json.loads(_json)
         sql_template = 'CREATE DATABASE %s %s'
         sql = []
 
@@ -511,7 +515,7 @@ class SqlCreator(DBConnector):
         -------
         sql_list: String
             a list of sql_list contains sql statement: 'SHOW CREATE DATABASE [database_name]'
-        dict: dict
+        dic: dict
             a dictionary of retrieve result
 
         Examples
@@ -523,15 +527,15 @@ class SqlCreator(DBConnector):
         """
         sql_template = 'SHOW CREATE DATABASE %s;'
         objects = json.load(_json)
-        dict = {}
+        dic = {}
         sql_list = []
         try:
             sql_list.append(sql_template % objects['database'])
-            dict = self.execute_sql(sql_template % objects['database']).fetchall()
+            dic = self.execute_sql(sql_template % objects['database']).fetchall()
         except pymysql.err.ProgrammingError:
             print("数据库'%s'不存在！" % objects['database'])
 
-        return sql_list, dict
+        return sql_list, dic
 
     def update_database_sql(self, _json):
         """  U(Update) database
@@ -670,7 +674,7 @@ class SqlCreator(DBConnector):
                 count = count - 1
                 print("Sql Error: %s 语句存在错误，并没有被执行！" % affair)
 
-        self._transaction = self._transaction.clear()
+        self._transaction.clear()
         status = str(count) + '-' + str(total)
         return status
 
