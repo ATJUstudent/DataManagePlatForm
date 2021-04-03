@@ -483,7 +483,7 @@ class SqlCreator(DBConnector):
 
         """
         objects = json.load(_json)
-        sql_template = 'CREATE DATABASE %s%s'
+        sql_template = 'CREATE DATABASE %s %s'
         sql = []
 
         database_name = objects['database']
