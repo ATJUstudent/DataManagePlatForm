@@ -21,6 +21,7 @@ class FileImportTool(SqlCreator):
     Interface for inserting data into an existed table according to excel file
     Interface for inserting data into an existed table according to csv file
     Interface for rollback the new database
+    Interface for rollback the new table
 
     """
 
