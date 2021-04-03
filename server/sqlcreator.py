@@ -453,7 +453,7 @@ class SqlCreator(DBConnector):
         sql_list = []
 
         for _, value in objects['table'].items():
-            sql_list.append(sql_template % database_name + '.' + value)
+            sql_list.append(sql_template % (database_name + '.' + value))
 
         self._transaction = self._transaction + sql_list
         return sql_list
