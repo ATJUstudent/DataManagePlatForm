@@ -121,7 +121,7 @@ class SqlCreator(DBConnector):
         sql_template = 'SELECT %s FROM %s'
         sql_list = []
 
-        fields = json.load(_json)
+        fields = json.loads(_json)
         columns = fields['Fields']
         columns_str = ', '.join(columns)
         try:
@@ -171,7 +171,7 @@ class SqlCreator(DBConnector):
          "UPDATE table1 SET name='White', password=123 WHERE id=3;"]
 
         """
-        objects = json.load(_json)
+        objects = json.loads(_json)
         assert len(objects) < 10000, u'修改数据太多超出限制！'
         description_list = self.table_columns(database_name, table_name).fetchall()
         sql_template = 'UPDATE %s SET %s WHERE %s;'
@@ -181,17 +181,33 @@ class SqlCreator(DBConnector):
         for description in description_list:
             if description['Key'] == 'PRI':
                 primary_key = description['Field']
-
-        for _, value in objects.items():
-            modify_attr = value["update"]
-            key_value = []
-            for attr in modify_attr:
-                if type(value[attr]) != int and type(value[attr]) != float:
-                    value[attr] = "'" + str(value[attr]) + "'"
-                key_value.append(attr + '=' + str(value[attr]))
-            key_value_str = ', '.join(key_value)
-            sql_list.append(sql_template % (database_name + '.' + table_name, key_value_str,
-                                            primary_key + "=" + str(value[primary_key])))
+        if primary_key == '':
+            print('该数据库中没有主键，使用其所有属性值作为索引使用，可能会有预料之外的错误。')
+            for _, value in objects.items():
+                modify_attr = value["update"]
+                key_value = []
+                for attr in modify_attr:
+                    if type(value[attr]) != int and type(value[attr]) != float:
+                        value[attr] = "'" + str(value[attr]) + "'"
+                    key_value.append(attr + '=' + str(value[attr]))
+                key_value_str = ', '.join(key_value)
+                cond = []
+                for k, v in value.items():
+                    cond.append('%s=%s, ' % (k, v))
+                cond_str = ', '.join(cond)
+                sql_list.append((sql_template % (database_name + '.' + table_name,
+                                                 key_value_str, cond_str)).rstrip(', '))
+        else:
+            for _, value in objects.items():
+                modify_attr = value["update"]
+                key_value = []
+                for attr in modify_attr:
+                    if type(value[attr]) != int and type(value[attr]) != float:
+                        value[attr] = "'" + str(value[attr]) + "'"
+                    key_value.append(attr + '=' + str(value[attr]))
+                key_value_str = ', '.join(key_value)
+                sql_list.append(sql_template % (database_name + '.' + table_name, key_value_str,
+                                                primary_key + "=" + str(value[primary_key])))
 
         self._transaction = self._transaction + sql_list
         return sql_list
@@ -230,9 +246,9 @@ class SqlCreator(DBConnector):
 
         """
         description_list = self.table_columns(database_name, table_name).fetchall()
-        objects = json.load(_json)
+        objects = json.loads(_json)
         assert len(objects) < 10000, u'修改数据太多超出限制！'
-        sql_template = 'DELETE FROM %s WHERE %s'
+        sql_template = 'DELETE FROM %s WHERE %s;'
         sql_list = []
 
         primary_key = ''
@@ -243,14 +259,15 @@ class SqlCreator(DBConnector):
         if primary_key == '':
             print('该数据库中没有主键，使用其所有属性值作为索引使用，可能会有预料之外的错误。')
             for _, value in objects.items():
-                cond_str = ''
+                cond = []
                 for k, v in value.items():
-                    cond_str = cond_str + '%s=%s, ' % (k, v)
-                sql_list.append((sql_template % (database_name + '.' + table_name, cond_str)).rstrip(', ') + ';')
+                    cond.append('%s=%s' % (k, v))
+                cond_str = ', '.join(cond)
+                sql_list.append((sql_template % (database_name + '.' + table_name, cond_str)))
         else:
             for _, value in objects.items():
                 sql_list.append(sql_template % (database_name + '.' + table_name,
-                                                primary_key + "=" + str(value[primary_key])) + ';')
+                                                primary_key + "=" + str(value[primary_key])))
 
         self._transaction = self._transaction + sql_list
         return sql_list
@@ -296,17 +313,17 @@ class SqlCreator(DBConnector):
             for _, field in value.items():
                 attr_str = field['Field'] + ' ' + field['Type']
 
-                if field['Key'] == 'PRI':
+                if field['Key'].upper() == 'PRI':
                     attr_str = attr_str + ' PRIMARY KEY'
 
                 try:
-                    if field['Null'] == 'NO':
+                    if field['Null'].upper() == 'NO':
                         attr_str = attr_str + ' NOT NULL'
                 except KeyError:
                     pass
 
                 try:
-                    if field['Default'] == 'NULL':
+                    if field['Default'].upper() == 'NULL':
                         attr_str = attr_str + ' DEFAULT NULL'
                     elif type(field['Default']) != int and type(field['Default']) != float:
                         attr_str = attr_str + " '" + field['Default'] + "'"
@@ -349,7 +366,7 @@ class SqlCreator(DBConnector):
         ['DESC table2']
 
         """
-        objects = json.load(_json)
+        objects = json.loads(_json)
         assert len(objects) == 1, u'输入的查询对象没有意义！'
         sql_template = 'DESC %s'
         sql_list = []
@@ -396,7 +413,7 @@ class SqlCreator(DBConnector):
         if "Alter" key is "drop", it will delete this column
 
         """
-        objects = json.load(_json)
+        objects = json.loads(_json)
         sql_template = 'ALTER TABLE %s %s %s;'
         sql_list = []
 
@@ -448,12 +465,12 @@ class SqlCreator(DBConnector):
         ['DROP TABLE table1;', 'DROP TABLE table2;', 'DROP TABLE table3;']
 
         """
-        objects = json.load(_json)
+        objects = json.loads(_json)
         sql_template = 'DROP TABLE %s;'
         sql_list = []
 
         for _, value in objects['table'].items():
-            sql_list.append(sql_template % (database_name + '.' + value))
+            sql_list.append(sql_template % database_name + '.' + value)
 
         self._transaction = self._transaction + sql_list
         return sql_list
@@ -526,7 +543,7 @@ class SqlCreator(DBConnector):
 
         """
         sql_template = 'SHOW CREATE DATABASE %s;'
-        objects = json.load(_json)
+        objects = json.loads(_json)
         dic = {}
         sql_list = []
         try:
@@ -564,7 +581,7 @@ class SqlCreator(DBConnector):
         only character encoding modification is supported
 
         """
-        objects = json.load(_json)
+        objects = json.loads(_json)
         sql_template = "ALTER DATABASE %s CHARSET='%s'"
         sql_list = [sql_template % (objects['database'], objects['charset'])]
 
@@ -594,7 +611,7 @@ class SqlCreator(DBConnector):
         ['DROP DATABASE test;']
 
         """
-        objects = json.load(_json)
+        objects = json.loads(_json)
         sql_template = 'DROP DATABASE %s;'
         sql_list = []
         for database in objects['database']:
